@@ -3,7 +3,7 @@ A sample project trying to build a Pam module
 
 Building the PAM module and installing it on your system.
 ```
-sudo apt install autoconf automake make libtool libpam0g-dev
+sudo apt install autoconf automake make libtool libpam0g-dev libqrencode4 libssl-dev
 autoreconf -i
 make 
 sudo make install

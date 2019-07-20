@@ -3,7 +3,7 @@
 .dirstamp
 cmake-build-debug
 libtool
-
+*.pem
 
 
 # http://www.gnu.org/software/autoconf
