@@ -151,11 +151,11 @@ void Servlet(SSL *ssl) /* Serve the connection -- threadable */
             if(!strcmp(key, "urs")) {
                 printf("URS: %s\n", value);
             }
+            free(value);
             free(key);
             pair = strtok((char *)0, "&");
         }
 
-        free(value);
         free(ret);
         free(pair);
 
