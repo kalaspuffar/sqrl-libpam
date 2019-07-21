@@ -114,7 +114,7 @@ void Servlet(SSL *ssl) /* Serve the connection -- threadable */
     char buf[1024] = {0};
 
     int sd, bytes;
-    const char *ServerResponse = "HTTP/1.1 200 OK\nContent-Length: 108\nContent-Type: application/x-www-form-urlencoded\n\ndmVyPTENCm51dD01aHFaS3VIeXE1dDZ5Mmlmb1czd1B3DQp0aWY9NQ0KcXJ5PS9zcXJsP251dD01aHFaS3VIeXE1dDZ5Mmlmb1czd1B3DQo";
+    const char *ServerResponse = "HTTP/1.1 200 OK\r\nContent-Length: 107\r\nContent-Type: application/x-www-form-urlencoded\r\n\r\ndmVyPTENCm51dD01aHFaS3VIeXE1dDZ5Mmlmb1czd1B3DQp0aWY9NQ0KcXJ5PS9zcXJsP251dD01aHFaS3VIeXE1dDZ5Mmlmb1czd1B3DQo";
 
     if (SSL_accept(ssl) == FAIL) /* do SSL-protocol accept */
         ERR_print_errors_fp(stderr);
@@ -123,6 +123,12 @@ void Servlet(SSL *ssl) /* Serve the connection -- threadable */
         ShowCerts(ssl);                          /* get any certificates */
         bytes = SSL_read(ssl, buf, sizeof(buf)); /* get request */
         buf[bytes] = '\0';
+
+        char *ret;
+
+        ret = strstr(buf, "\r\n\r\n");
+
+        printf("The substring is: %s\n", ret);
 
         printf("Client msg: \"%s\"\n", buf);
 
