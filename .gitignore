@@ -4,6 +4,8 @@
 cmake-build-debug
 libtool
 *.pem
+/.libs
+sqrl-login-associate
 
 
 # http://www.gnu.org/software/autoconf

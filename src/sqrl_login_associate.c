@@ -151,8 +151,8 @@ void Servlet(SSL *ssl) {
                 urs = (char *)malloc(strlen(value)+1);
                 strcpy(urs, value);
             }
-            free(value);
-            free(key);
+            if(value) free(value);
+            if(key) free(key);
             pair = strtok((char *)0, "&");
         }
 
@@ -160,21 +160,23 @@ void Servlet(SSL *ssl) {
         b64_decode(client, decodeClient, strlen(client));
         printf("Client: %s\n", decodeClient);
 
-        char * message = (char *)malloc(strlen(client) + strlen(server) + 1);
-        message = strcat(message, client);
-        message = strcat(message, server);
+        char * message = (char *)malloc(strlen(client) + 1);
+        strcpy(message, client);
+        strcat(message, server);
+
+	printf("MESSAGE(%d): %s\n", strlen(message), message);
 
         char * idk = "ZIkjsAxCq1oC2Cywhw3NdPZEnWEQlARg_nTDUvpJjuQ";
         unsigned char * decodeIDK = (unsigned char *)malloc(strlen(idk) + 1);
         b64_decode(idk, decodeIDK, strlen(idk));
-
+	
         unsigned char * decodeIDS = (unsigned char *)malloc(strlen(ids) + 1);
         b64_decode(ids, decodeIDS, strlen(ids));
-
-        if(!crypto_sign_verify_detached(decodeIDS, message, (unsigned long long) strlen(message), decodeIDK)) {
-            printf("SIGNED");
-        } else {
+	
+        if(crypto_sign_verify_detached(decodeIDS, (unsigned char*) message, (unsigned long long) strlen(message), decodeIDK) != 0) {
             printf("Incorrect signature");
+        } else {
+            printf("SIGNED");
         }
 
         if(client != NULL) {
