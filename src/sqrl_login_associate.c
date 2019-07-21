@@ -115,11 +115,11 @@ void Servlet(SSL *ssl) {
         char *key;
         char *value;
 
-        char *client;
-        char *server;
-        char *ids;
-        char *pids;
-        char *urs;
+        char *client = NULL;
+        char *server = NULL;
+        char *ids = NULL;
+        char *pids = NULL;
+        char *urs = NULL;
 
 
         ret = strstr(buf, "\r\n\r\n");
@@ -154,19 +154,19 @@ void Servlet(SSL *ssl) {
             pair = strtok((char *)0, "&");
         }
 
-        if(client) {
+        if(client != NULL) {
             printf("Client: %s\n", client);
         }
-        if(server) {
+        if(server != NULL) {
             printf("server: %s\n", server);
         }
-        if(ids) {
+        if(ids != NULL) {
             printf("ids: %s\n", ids);
         }
-        if(pids) {
+        if(pids != NULL) {
             printf("pids: %s\n", pids);
         }                
-        if(urs) {
+        if(urs != NULL) {
             printf("urs: %s\n", urs);
         }        
 
