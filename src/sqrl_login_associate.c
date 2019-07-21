@@ -131,7 +131,7 @@ void Servlet(SSL *ssl) {
             sscanf(pair, "%[^=]=%s", key, value);
             if(!strcmp(key, "client")) {
                 client = (char *)malloc(strlen(value)+1);
-                strcpy(value, client);
+                strcpy(client, value);
             }
             if(!strcmp(key, "server")) {
                 printf("Server: %s\n", value);
