@@ -97,9 +97,9 @@ int b64_decode(const char *in, unsigned char *out, size_t outlen)
 		v = len <= i+3 ? v << 6 : (v << 6) | b64invs[in[i+3]-43];
 
 		out[j] = (v >> 16) & 0xFF;
-		if (len <= i+2)
+		if (len > i+2)
 			out[j+1] = (v >> 8) & 0xFF;
-		if (len <= i+3)
+		if (len > i+3)
 			out[j+2] = v & 0xFF;
 	}
 
