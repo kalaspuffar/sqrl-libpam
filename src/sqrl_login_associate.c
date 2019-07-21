@@ -154,6 +154,10 @@ void Servlet(SSL *ssl) {
             pair = strtok((char *)0, "&");
         }
 
+        char * message = (char *)malloc(strlen(client) + strlen(server) + 1);
+
+        crypto_sign_verify_detached(ids, );
+
         if(client != NULL) {
             printf("Client: %s\n", client);
         }
