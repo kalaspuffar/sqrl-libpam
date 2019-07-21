@@ -125,10 +125,12 @@ void Servlet(SSL *ssl) /* Serve the connection -- threadable */
         buf[bytes] = '\0';
 
         char *ret;
+        char *ret2;
 
         ret = strstr(buf, "\r\n\r\n");
+        ret2 = strcpy(ret[4], ret2);
 
-        printf("The substring is: %s\n", ret);
+        printf("The substring is: %s\n", ret2);
 
         printf("Client msg: \"%s\"\n", buf);
 
