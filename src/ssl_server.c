@@ -98,6 +98,18 @@ void ShowCerts(SSL *ssl) {
     }
 }
 
+char *rtrim(char *str)
+{
+    int i;
+    const char seps = "\t\n\v\f\r ";
+    i = strlen(str) - 1;
+    while (i >= 0 && strchr(seps, str[i]) != NULL) {
+        str[i] = '\0';
+        i--;
+    }
+    return str;
+}
+
 /* Serve the connection -- threadable */
 int Servlet(SSL *ssl) {
     char buf[1024] = {0};
@@ -161,7 +173,7 @@ int Servlet(SSL *ssl) {
         b64_decode(client, decodeClient, strlen(client));
         printf("Client: %s\n", decodeClient);
 
-        char *command;
+        char *command = NULL;
         pair = strtok(decodeClient, "\r\n");
         while(pair) {
             key = (char *)malloc(strlen(pair)+1);
@@ -169,6 +181,7 @@ int Servlet(SSL *ssl) {
             sscanf(pair, "%[^=]=%s", key, value);
             if(!strcmp(key, "cmd")) {
                 command = (char *)malloc(strlen(value)+1);
+                rtrim(value);
                 strcpy(command, value);
             }
 
@@ -195,7 +208,7 @@ int Servlet(SSL *ssl) {
         if(crypto_sign_verify_detached(decodeIDS, (unsigned char*) message, (unsigned long long) strlen(message), decodeIDK) != 0) {
             retCode = PAM_AUTH_ERR;
         } else {
-            if(!strcmp(command, "ident")) {
+            if(command != NULL && !strcmp(command, "ident")) {
                 if(1 || !strcmp(idk, idk)) {
                     retCode = PAM_SUCCESS;
                 } else {
