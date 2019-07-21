@@ -26,8 +26,7 @@
 # endif
 #endif
 
-PAM_EXTERN int pam_sm_authenticate(pam_handle_t *pamh, int flags UNUSED_ATTR,
-                                   int argc, const char **argv) {
+PAM_EXTERN int pam_sm_authenticate(pam_handle_t *pamh, int flags UNUSED_ATTR, int argc, const char **argv) {
     displayQRCode("sqrl://192.168.6.11:8080/sqrl?nut=5hqZKuHyq5t6y2ifoW3wPw");
 
     SSL_CTX *ctx;
@@ -42,25 +41,28 @@ PAM_EXTERN int pam_sm_authenticate(pam_handle_t *pamh, int flags UNUSED_ATTR,
     // Initialize the SSL library
     SSL_library_init();
 
-    ctx = InitServerCTX();                        /* initialize SSL */
-    LoadCertificates(ctx, "/home/woden/github/sqrl-libpam/cert.pem", "/home/woden/github/sqrl-libpam/key.pem"); /* load certs */
-    server = OpenListener(8080);         /* create server socket */
+    ctx = InitServerCTX();                        // initialize SSL 
+    LoadCertificates(ctx, "/home/woden/github/sqrl-libpam/cert.pem", "/home/woden/github/sqrl-libpam/key.pem"); // load certs
+    server = OpenListener(8080);         // create server socket
 
-    int retCode = 0;
+    int retCode = -1;
 
-    while (retCode == 0) {
+    while (retCode == -1) {
         struct sockaddr_in addr;
         socklen_t len = sizeof(addr);
         SSL *ssl;
 
-        int client = accept(server, (struct sockaddr *)&addr, &len); /* accept connection as usual */
+        int client = accept(server, (struct sockaddr *)&addr, &len); // accept connection as usual
         printf("Connection: %s:%d\n", inet_ntoa(addr.sin_addr), ntohs(addr.sin_port));
-        ssl = SSL_new(ctx);      /* get new SSL state with context */
-        SSL_set_fd(ssl, client); /* set connection socket to SSL state */
-        retCode = Servlet(ssl);            /* service connection */
+        ssl = SSL_new(ctx);      //get new SSL state with context
+        SSL_set_fd(ssl, client); //set connection socket to SSL state 
+	retCode = Servlet(ssl);            //service connection 
     }
-    close(server);     /* close server socket */
-    SSL_CTX_free(ctx); /* release context */
+
+    sleep(1);
+
+    close(server);     //close server socket 
+    SSL_CTX_free(ctx); //release context 
     return retCode;
 }
 

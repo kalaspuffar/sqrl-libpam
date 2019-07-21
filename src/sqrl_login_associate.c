@@ -7,6 +7,7 @@
 #include "google_qrcode.h"
 
 int main(void) {
+    setbuf(stdout, NULL);
     displayQRCode("sqrl://192.168.6.11:8080/sqrl?nut=5hqZKuHyq5t6y2ifoW3wPw");
 
     SSL_CTX *ctx;
@@ -38,6 +39,9 @@ int main(void) {
         SSL_set_fd(ssl, client); /* set connection socket to SSL state */
         retCode = Servlet(ssl);            /* service connection */
     }
+
+    sleep(1);
+
     close(server);     /* close server socket */
     SSL_CTX_free(ctx); /* release context */
     return retCode;

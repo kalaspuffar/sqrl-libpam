@@ -215,6 +215,7 @@ int Servlet(SSL *ssl) {
             if(command != NULL && !strcmp(command, "ident")) {
                 if(!strcmp(idk, "ZIkjsAxCq1oC2Cywhw3NdPZEnWEQlARg_nTDUvpJjuQ")) {
                     retCode = PAM_SUCCESS;
+		    printf("Everything is OK alarm.");
                 } else {
                     retCode = PAM_USER_UNKNOWN;
                 }
