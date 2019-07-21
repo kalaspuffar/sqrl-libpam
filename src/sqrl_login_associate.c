@@ -164,7 +164,14 @@ void Servlet(SSL *ssl) {
         message = strcat(message, client);
         message = strcat(message, server);
 
-        if(crypto_sign_verify_detached(ids, message, (unsigned long long) strlen(message), "ZIkjsAxCq1oC2Cywhw3NdPZEnWEQlARg_nTDUvpJjuQ")) {
+        char * idk = "ZIkjsAxCq1oC2Cywhw3NdPZEnWEQlARg_nTDUvpJjuQ";
+        unsigned char * decodeIDK = (unsigned char *)malloc(strlen(idk) + 1);
+        b64_decode(idk, decodeIDK, strlen(idk));
+
+        unsigned char * decodeIDS = (unsigned char *)malloc(strlen(ids) + 1);
+        b64_decode(ids, decodeIDS, strlen(ids));
+
+        if(!crypto_sign_verify_detached(decodeIDS, message, (unsigned long long) strlen(message), decodeIDK)) {
             printf("SIGNED");
         } else {
             printf("Incorrect signature");
