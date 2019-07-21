@@ -134,16 +134,20 @@ void Servlet(SSL *ssl) {
                 strcpy(client, value);
             }
             if(!strcmp(key, "server")) {
-                printf("Server: %s\n", value);
+                server = (char *)malloc(strlen(value)+1);
+                strcpy(server, value);
             }
             if(!strcmp(key, "ids")) {
-                printf("IDS: %s\n", value);
+                ids = (char *)malloc(strlen(value)+1);
+                strcpy(ids, value);
             }
             if(!strcmp(key, "pids")) {
-                printf("PIDS: %s\n", value);
+                pids = (char *)malloc(strlen(value)+1);
+                strcpy(pids, value);
             }
             if(!strcmp(key, "urs")) {
-                printf("URS: %s\n", value);
+                urs = (char *)malloc(strlen(value)+1);
+                strcpy(urs, value);
             }
             free(value);
             free(key);
@@ -152,8 +156,19 @@ void Servlet(SSL *ssl) {
 
         if(client) {
             printf("Client: %s\n", client);
-            free(client);
         }
+        if(server) {
+            printf("server: %s\n", server);
+        }
+        if(ids) {
+            printf("ids: %s\n", ids);
+        }
+        if(pids) {
+            printf("pids: %s\n", pids);
+        }                
+        if(urs) {
+            printf("urs: %s\n", urs);
+        }        
 
         free(ret);
         free(pair);
