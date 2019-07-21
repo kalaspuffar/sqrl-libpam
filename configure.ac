@@ -63,7 +63,7 @@ AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
 
 	AC_MSG_CHECKING(whether compiler understands -Wall)
 	old_CFLAGS="$CFLAGS"
-	CFLAGS="$CFLAGS -Wall"
+	CFLAGS="$CFLAGS -Wall -lssl -lcrypto"
 	AC_COMPILE_IFELSE([AC_LANG_PROGRAM([],[])],
 	  AC_MSG_RESULT(yes),
 	  AC_MSG_RESULT(no)
