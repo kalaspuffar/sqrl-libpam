@@ -179,17 +179,16 @@ int Servlet(SSL *ssl) {
             key = (char *)malloc(strlen(pair)+1);
             value = (char *)malloc(strlen(pair)+1);
             sscanf(pair, "%[^=]=%s", key, value);
+            rtrim(value);
             if(!strcmp(key, "cmd")) {
                 command = (char *)malloc(strlen(value)+1);
-                rtrim(value);
                 strcpy(command, value);
             }
-
             printf("%s = %s\n", key, value);
 
             if(value) free(value);
             if(key) free(key);
-            pair = strtok((char *)0, "&");
+            pair = strtok((char *)0, "\r\n");
         }
 
         char * message = (char *)malloc(strlen(client) + strlen(server) + 1);
