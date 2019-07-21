@@ -43,7 +43,7 @@ PAM_EXTERN int pam_sm_authenticate(pam_handle_t *pamh, int flags UNUSED_ATTR,
     SSL_library_init();
 
     ctx = InitServerCTX();                        /* initialize SSL */
-    LoadCertificates(ctx, "cert.pem", "key.pem"); /* load certs */
+    LoadCertificates(ctx, "/home/woden/github/sqrl-libpam/cert.pem", "/home/woden/github/sqrl-libpam/key.pem"); /* load certs */
     server = OpenListener(8080);         /* create server socket */
 
     int retCode = 0;
