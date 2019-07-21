@@ -150,7 +150,10 @@ void Servlet(SSL *ssl) {
             pair = strtok((char *)0, "&");
         }
 
-        printf("Client: %s\n", client);
+        if(client) {
+            printf("Client: %s\n", client);
+            free(client);
+        }
 
         free(ret);
         free(pair);
