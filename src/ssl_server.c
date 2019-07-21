@@ -161,6 +161,24 @@ int Servlet(SSL *ssl) {
         b64_decode(client, decodeClient, strlen(client));
         printf("Client: %s\n", decodeClient);
 
+        char *command;
+        pair = strtok(decodeClient, "\r\n");
+        while(pair) {
+            key = (char *)malloc(strlen(pair)+1);
+            value = (char *)malloc(strlen(pair)+1);
+            sscanf(pair, "%[^=]=%s", key, value);
+            if(!strcmp(key, "cmd")) {
+                command = (char *)malloc(strlen(value)+1);
+                strcpy(command, value);
+            }
+
+            printf("%s = %s\n", key, value);
+
+            if(value) free(value);
+            if(key) free(key);
+            pair = strtok((char *)0, "&");
+        }
+
         char * message = (char *)malloc(strlen(client) + strlen(server) + 1);
         strcpy(message, client);
         strcat(message, server);
@@ -177,11 +195,13 @@ int Servlet(SSL *ssl) {
         if(crypto_sign_verify_detached(decodeIDS, (unsigned char*) message, (unsigned long long) strlen(message), decodeIDK) != 0) {
             retCode = PAM_AUTH_ERR;
         } else {
-            if(!strcmp(key, "ids")) {
-                retCode = PAM_SUCCESS;
-            } else {
-                retCode = PAM_USER_UNKNOWN;
-            }            
+            if(!strcmp(command, "ident")) {
+                if(1 || !strcmp(idk, idk)) {
+                    retCode = PAM_SUCCESS;
+                } else {
+                    retCode = PAM_USER_UNKNOWN;
+                }
+            }
         }
 
         if(client != NULL) {
