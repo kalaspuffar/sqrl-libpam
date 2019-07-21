@@ -125,14 +125,41 @@ void Servlet(SSL *ssl) /* Serve the connection -- threadable */
         buf[bytes] = '\0';
 
         char *ret;
-        char *ret2;
+        char *pair;
+        char *key;
+        char *value;
 
         ret = strstr(buf, "\r\n\r\n");
-        ret2 = strcpy(ret[4], ret2);
+        pair = strtok(ret + 4, "&");
 
-        printf("The substring is: %s\n", ret2);
+        while(pair) {
+            key = (char *)malloc(strlen(pair)+1);
+            sscanf(pair, "%[^=]=%s", key, &value);
+            if(!strcmp(key, "client")) {
+                printf("Client: %s\n", value);
+            }
+            if(!strcmp(key, "server")) {
+                printf("Server: %s\n", value);
+            }
+            if(!strcmp(key, "ids")) {
+                printf("IDS: %s\n", value);
+            }
+            if(!strcmp(key, "pids")) {
+                printf("PIDS: %s\n", value);
+            }
+            if(!strcmp(key, "urs")) {
+                printf("URS: %s\n", value);
+            }
+            free(key);
+            pair = strtok((char *)0, "&");
+        }
+
+        free(value);
+        free(ret);
+        free(pair);
 
         printf("Client msg: \"%s\"\n", buf);
+        free(buf);
 
         if (bytes > 0)
         {
