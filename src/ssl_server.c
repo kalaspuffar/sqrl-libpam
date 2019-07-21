@@ -170,10 +170,13 @@ int Servlet(SSL *ssl) {
         }
 
         unsigned char * decodeClient = (unsigned char *)malloc(strlen(client) + 1);
+        memset(decodeClient, 0, sizeof(decodeClient));
         b64_decode(client, decodeClient, strlen(client));
         printf("Client: %s\n", decodeClient);
 
         char *command = NULL;
+        char *idk = NULL;
+
         pair = strtok(decodeClient, "\r\n");
         while(pair != NULL) {
             key = (char *)malloc(strlen(pair)+1);
@@ -182,6 +185,10 @@ int Servlet(SSL *ssl) {
             if(!strcmp(key, "cmd")) {
                 command = (char *)malloc(strlen(value)+1);
                 strcpy(command, value);
+            }
+            if(!strcmp(key, "idk")) {
+                idk = (char *)malloc(strlen(value)+1);
+                strcpy(idk, value);
             }
             printf("%s = %s\n", key, value);
 
@@ -196,7 +203,6 @@ int Servlet(SSL *ssl) {
 
 	    printf("MESSAGE(%d): %s\n", strlen(message), message);
 
-        char * idk = "ZIkjsAxCq1oC2Cywhw3NdPZEnWEQlARg_nTDUvpJjuQ";
         unsigned char * decodeIDK = (unsigned char *)malloc(strlen(idk) + 1);
         b64_decode(idk, decodeIDK, strlen(idk));
 	
@@ -207,7 +213,7 @@ int Servlet(SSL *ssl) {
             retCode = PAM_AUTH_ERR;
         } else {
             if(command != NULL && !strcmp(command, "ident")) {
-                if(1 || !strcmp(idk, idk)) {
+                if(!strcmp(idk, "ZIkjsAxCq1oC2Cywhw3NdPZEnWEQlARg_nTDUvpJjuQ")) {
                     retCode = PAM_SUCCESS;
                 } else {
                     retCode = PAM_USER_UNKNOWN;
