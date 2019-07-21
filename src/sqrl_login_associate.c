@@ -9,6 +9,7 @@
 #include <resolv.h>
 #include "openssl/ssl.h"
 #include "openssl/err.h"
+#include "sodium.h"
 
 #include "base64.h"
 #include "google_qrcode.h"
