@@ -175,11 +175,10 @@ int Servlet(SSL *ssl) {
 
         char *command = NULL;
         pair = strtok(decodeClient, "\r\n");
-        while(pair) {
+        while(pair != NULL) {
             key = (char *)malloc(strlen(pair)+1);
             value = (char *)malloc(strlen(pair)+1);
             sscanf(pair, "%[^=]=%s", key, value);
-            rtrim(value);
             if(!strcmp(key, "cmd")) {
                 command = (char *)malloc(strlen(value)+1);
                 strcpy(command, value);
@@ -188,7 +187,7 @@ int Servlet(SSL *ssl) {
 
             if(value) free(value);
             if(key) free(key);
-            pair = strtok((char *)0, "\r\n");
+            pair = strtok(NULL, "\r\n");
         }
 
         char * message = (char *)malloc(strlen(client) + strlen(server) + 1);
