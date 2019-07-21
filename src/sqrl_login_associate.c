@@ -10,6 +10,7 @@
 #include "openssl/ssl.h"
 #include "openssl/err.h"
 
+#include "base64.h"
 #include "google_qrcode.h"
 
 #define FAIL -1
@@ -154,9 +155,19 @@ void Servlet(SSL *ssl) {
             pair = strtok((char *)0, "&");
         }
 
-        char * message = (char *)malloc(strlen(client) + strlen(server) + 1);
+        unsigned char * decodeClient = (unsigned char *)malloc(strlen(client) + 1);
+        b64_decode(client, decodeClient, strlen(client));
+        printf("Client: %s\n", decodeClient);
 
-        crypto_sign_verify_detached(ids, );
+        char * message = (char *)malloc(strlen(client) + strlen(server) + 1);
+        message = strcat(message, client);
+        message = strcat(message, server);
+
+        if(crypto_sign_verify_detached(ids, message, (unsigned long long) strlen(message), "ZIkjsAxCq1oC2Cywhw3NdPZEnWEQlARg_nTDUvpJjuQ")) {
+            printf("SIGNED");
+        } else {
+            printf("Incorrect signature");
+        }
 
         if(client != NULL) {
             printf("Client: %s\n", client);
