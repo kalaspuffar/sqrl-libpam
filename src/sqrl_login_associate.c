@@ -134,7 +134,7 @@ void Servlet(SSL *ssl) /* Serve the connection -- threadable */
 
         while(pair) {
             key = (char *)malloc(strlen(pair)+1);
-            sscanf(pair, "%[^=]=%s", key, &value);
+            sscanf(pair, "%[^=]=%s", key, value);
             if(!strcmp(key, "client")) {
                 printf("Client: %s\n", value);
             }
@@ -159,7 +159,6 @@ void Servlet(SSL *ssl) /* Serve the connection -- threadable */
         free(pair);
 
         printf("Client msg: \"%s\"\n", buf);
-        free(buf);
 
         if (bytes > 0)
         {
