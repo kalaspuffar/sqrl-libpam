@@ -168,10 +168,7 @@ void Servlet(SSL *ssl) {
         }                
         if(urs != NULL) {
             printf("urs: %s\n", urs);
-        }        
-
-        free(ret);
-        free(pair);
+        }
 
         if (bytes > 0) {
             SSL_write(ssl, ServerResponse, strlen(ServerResponse)); /* send reply */
