@@ -9,13 +9,15 @@ pam_LTLIBRARIES   = pam_sqrl_login.la
 MODULES_LDFLAGS = -avoid-version -module -shared -export-dynamic
 
 sqrl_login_associate_SOURCES = \
-        src/google_qrcode.c \
+	src/google_qrcode.c \
 	src/base64.c \
+	src/ssl_server.c \
 	src/sqrl_login_associate.c
 
 pam_sqrl_login_la_SOURCES = \
-        src/google_qrcode.c \
+	src/google_qrcode.c \
 	src/base64.c \
+	src/ssl_server.c \
 	src/pam_sqrl_login.c
 pam_sqrl_login_la_LIBADD  = -lpam
 pam_sqrl_login_la_CFLAGS  = $(AM_CFLAGS)

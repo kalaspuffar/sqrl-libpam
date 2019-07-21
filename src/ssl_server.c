@@ -103,6 +103,7 @@ int Servlet(SSL *ssl) {
     char buf[1024] = {0};
 
     int sd, bytes;
+    int retCode = -1;
     const char *ServerResponse = "HTTP/1.1 200 OK\r\nContent-Length: 107\r\nContent-Type: application/x-www-form-urlencoded\r\n\r\ndmVyPTENCm51dD01aHFaS3VIeXE1dDZ5Mmlmb1czd1B3DQp0aWY9NQ0KcXJ5PS9zcXJsP251dD01aHFaS3VIeXE1dDZ5Mmlmb1czd1B3DQo";
 
     if (SSL_accept(ssl) == FAIL) { /* do SSL-protocol accept */
@@ -160,7 +161,7 @@ int Servlet(SSL *ssl) {
         b64_decode(client, decodeClient, strlen(client));
         printf("Client: %s\n", decodeClient);
 
-        char * message = (char *)malloc(strlen(client) + 1);
+        char * message = (char *)malloc(strlen(client) + strlen(server) + 1);
         strcpy(message, client);
         strcat(message, server);
 
@@ -174,12 +175,12 @@ int Servlet(SSL *ssl) {
         b64_decode(ids, decodeIDS, strlen(ids));
 	
         if(crypto_sign_verify_detached(decodeIDS, (unsigned char*) message, (unsigned long long) strlen(message), decodeIDK) != 0) {
-            return PAM_AUTH_ERR;
+            retCode = PAM_AUTH_ERR;
         } else {
             if(!strcmp(key, "ids")) {
-                return PAM_SUCCESS;
+                retCode = PAM_SUCCESS;
             } else {
-                return PAM_USER_UNKNOWN;
+                retCode = PAM_USER_UNKNOWN;
             }            
         }
 
@@ -209,5 +210,5 @@ int Servlet(SSL *ssl) {
     SSL_free(ssl);        /* release SSL state */
     close(sd);            /* close connection */
 
-    return -1;
+    return retCode;
 }
