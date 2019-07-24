@@ -27,7 +27,7 @@
 #endif
 
 int converse(pam_handle_t *pamh, int nargs,
-                    PAM_CONST struct pam_message **message,
+                    struct pam_message **message,
                     struct pam_response **response) {
   struct pam_conv *conv;
   int retval = pam_get_item(pamh, PAM_CONV, (void *)&conv);
@@ -50,6 +50,10 @@ PAM_EXTERN int pam_sm_authenticate(pam_handle_t *pamh, int flags UNUSED_ATTR, in
     struct pam_message *msgs = &msg;
     struct pam_response *resp = NULL;
     int retval = converse(pamh, 1, &msgs, &resp);
+
+    if(retval = PAM_SUCCESS) {
+      printf("Response %s", resp);
+    }
 
     SSL_CTX *ctx;
     int server;
@@ -78,7 +82,11 @@ PAM_EXTERN int pam_sm_authenticate(pam_handle_t *pamh, int flags UNUSED_ATTR, in
         printf("Connection: %s:%d\n", inet_ntoa(addr.sin_addr), ntohs(addr.sin_port));
         ssl = SSL_new(ctx);      //get new SSL state with context
         SSL_set_fd(ssl, client); //set connection socket to SSL state
-	retCode = Servlet(ssl);            //service connection
+	      retCode = Servlet(ssl);            //service connection
+    }
+
+    if(retCode == -1) {
+       return PAM_AUTH_ERR;
     }
 
     sleep(1);
