@@ -38,16 +38,18 @@ int converse(pam_handle_t *pamh, int nargs,
 }
 
 PAM_EXTERN int pam_sm_authenticate(pam_handle_t *pamh, int flags UNUSED_ATTR, int argc, const char **argv) {
-    const char *prompt = "TESTING ?";
-    PAM_CONST struct pam_message msg = {
+    char prompt[4000];
+    setbuf(stdout, prompt);
+    displayQRCode("sqrl://192.168.6.11:8080/sqrl?nut=5hqZKuHyq5t6y2ifoW3wPw");
+    setbuf(stdout, NULL);
+
+    struct pam_message msg = {
       .msg_style = PAM_PROMPT_ECHO_ON,
       .msg = prompt
     };
-    PAM_CONST struct pam_message *msgs = &msg;
+    struct pam_message *msgs = &msg;
     struct pam_response *resp = NULL;
     int retval = converse(pamh, 1, &msgs, &resp);
-
-    displayQRCode("sqrl://192.168.6.11:8080/sqrl?nut=5hqZKuHyq5t6y2ifoW3wPw");
 
     SSL_CTX *ctx;
     int server;
