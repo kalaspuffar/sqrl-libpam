@@ -40,7 +40,7 @@ int converse(pam_handle_t *pamh, int nargs,
 PAM_EXTERN int pam_sm_authenticate(pam_handle_t *pamh, int flags UNUSED_ATTR, int argc, const char **argv) {
     char prompt[4000];
     setbuf(stdout, prompt);
-    displayQRCode("sqrl://192.168.6.11:8080/sqrl?nut=5hqZKuHyq5t6y2ifoW3wPw");
+    displayQRCode("sqrl://192.168.6.11:8080/sqrl?nut=5hqZKuHyq5t6y2ifoW3wPw", false);
     setbuf(stdout, NULL);
 
     struct pam_message msg = {

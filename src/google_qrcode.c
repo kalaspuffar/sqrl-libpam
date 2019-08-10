@@ -26,7 +26,7 @@
 #define UTF8_BOTTOMHALF   "\xE2\x96\x84"
 
 // Display QR code visually. If not possible, return 0.
-int displayQRCode(const char* url) {
+int displayQRCode(const char* url, bool utf8) {
   void *qrencode = dlopen("libqrencode.so.2", RTLD_NOW | RTLD_LOCAL);
   if (!qrencode) {
     qrencode = dlopen("libqrencode.so.3", RTLD_NOW | RTLD_LOCAL);
@@ -59,6 +59,47 @@ int displayQRCode(const char* url) {
   }
   QRcode *qrcode = QRcode_encodeString8bit(url, 0, 1);
 
+  const char *ptr = (char *)qrcode->data;
+  // Output QRCode using ANSI colors. Instead of black on white, we
+  // output black on grey, as that works independently of whether the
+  // user runs their terminal in a black on white or white on black color
+  // scheme.
+  // But this requires that we print a border around the entire QR Code.
+  // Otherwise readers won't be able to recognize it.
+  if (!utf8) {
+    for (int i = 0; i < 2; ++i) {
+      printf(ANSI_BLACKONGREY);
+      for (int x = 0; x < qrcode->width + 4; ++x) printf("  ");
+      puts(ANSI_RESET);
+    }
+    for (int y = 0; y < qrcode->width; ++y) {
+      printf(ANSI_BLACKONGREY"    ");
+      int isBlack = 0;
+      for (int x = 0; x < qrcode->width; ++x) {
+        if (*ptr++ & 1) {
+          if (!isBlack) {
+            printf(ANSI_BLACK);
+          }
+          isBlack = 1;
+        } else {
+          if (isBlack) {
+            printf(ANSI_WHITE);
+          }
+          isBlack = 0;
+        }
+        printf("  ");
+      }
+      if (isBlack) {
+        printf(ANSI_WHITE);
+      }
+      puts("    "ANSI_RESET);
+    }
+    for (int i = 0; i < 2; ++i) {
+      printf(ANSI_BLACKONGREY);
+      for (int x = 0; x < qrcode->width + 4; ++x) printf("  ");
+      puts(ANSI_RESET);
+    }
+  } else {
     // Drawing the QRCode with Unicode block elements is desirable as
     // it makes the code much smaller, which is often easier to scan.
     // Unfortunately, many terminal emulators do not display these
@@ -97,7 +138,7 @@ int displayQRCode(const char* url) {
       printf(" ");
     }
     puts(ANSI_RESET);
-
+  }
   QRcode_free(qrcode);
   dlclose(qrencode);
   return 1;

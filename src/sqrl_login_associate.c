@@ -8,7 +8,7 @@
 
 int main(void) {
     setbuf(stdout, NULL);
-    displayQRCode("sqrl://192.168.6.11:8080/sqrl?nut=5hqZKuHyq5t6y2ifoW3wPw");
+    displayQRCode("sqrl://192.168.6.11:8080/sqrl?nut=5hqZKuHyq5t6y2ifoW3wPw", true);
 
     SSL_CTX *ctx;
     int server;
