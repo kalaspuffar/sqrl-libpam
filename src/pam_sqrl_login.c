@@ -4,6 +4,7 @@
 #include <arpa/inet.h>
 #include <sys/socket.h>
 #include <unistd.h>
+#include <stdbool.h>
 
 #ifndef PAM_EXTERN
 #define PAM_EXTERN
@@ -27,7 +28,7 @@
 #endif
 
 int converse(pam_handle_t *pamh, int nargs,
-                    struct pam_message **message,
+                    const struct pam_message **message,
                     struct pam_response **response) {
   struct pam_conv *conv;
   int retval = pam_get_item(pamh, PAM_CONV, (void *)&conv);
@@ -43,16 +44,16 @@ PAM_EXTERN int pam_sm_authenticate(pam_handle_t *pamh, int flags UNUSED_ATTR, in
     displayQRCode("sqrl://192.168.6.11:8080/sqrl?nut=5hqZKuHyq5t6y2ifoW3wPw", false);
     setbuf(stdout, NULL);
 
-    struct pam_message msg = {
+    const struct pam_message msg = {
       .msg_style = PAM_PROMPT_ECHO_ON,
       .msg = prompt
     };
-    struct pam_message *msgs = &msg;
+    const struct pam_message *msgs = &msg;
     struct pam_response *resp = NULL;
     int retval = converse(pamh, 1, &msgs, &resp);
 
-    if(retval = PAM_SUCCESS) {
-      printf("Response %s", resp);
+    if (retval == PAM_SUCCESS) {
+      printf("Response %s", resp->resp);
     }
 
     SSL_CTX *ctx;
