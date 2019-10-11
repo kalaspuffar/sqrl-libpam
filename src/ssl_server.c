@@ -47,13 +47,11 @@ int isRoot() {
 }
 
 SSL_CTX *InitServerCTX(void) {
-    SSL_METHOD *method;
-    SSL_CTX *ctx;
 
     OpenSSL_add_all_algorithms();     /* load & register all cryptos, etc. */
     SSL_load_error_strings();         /* load all error messages */
-    method = TLSv1_2_server_method(); /* create new server-method instance */
-    ctx = SSL_CTX_new(method);        /* create new context from method */
+    const SSL_METHOD *method = TLSv1_2_server_method(); /* create new server-method instance */
+    SSL_CTX *ctx = SSL_CTX_new(method);        /* create new context from method */
     if (ctx == NULL) {
         ERR_print_errors_fp(stderr);
         abort();
@@ -101,7 +99,7 @@ void ShowCerts(SSL *ssl) {
 char *rtrim(char *str)
 {
     int i;
-    const char seps = "\t\n\v\f\r ";
+    const char seps[] = "\t\n\v\f\r ";
     i = strlen(str) - 1;
     while (i >= 0 && strchr(seps, str[i]) != NULL) {
         str[i] = '\0';
@@ -169,15 +167,16 @@ int Servlet(SSL *ssl) {
             pair = strtok((char *)0, "&");
         }
 
-        unsigned char * decodeClient = (unsigned char *)malloc(strlen(client) + 1);
-        memset(decodeClient, 0, sizeof(decodeClient));
+	size_t decodeClientSize = (strlen(client) + 1) * sizeof(unsigned char);
+        unsigned char * decodeClient = (unsigned char *)malloc(decodeClientSize);
+        memset(decodeClient, 0, decodeClientSize);
         b64_decode(client, decodeClient, strlen(client));
         printf("Client: %s\n", decodeClient);
 
         char *command = NULL;
         char *idk = NULL;
 
-        pair = strtok(decodeClient, "\r\n");
+        pair = strtok((char*)decodeClient, "\r\n");
         while(pair != NULL) {
             key = (char *)malloc(strlen(pair)+1);
             value = (char *)malloc(strlen(pair)+1);
@@ -201,7 +200,7 @@ int Servlet(SSL *ssl) {
         strcpy(message, client);
         strcat(message, server);
 
-	    printf("MESSAGE(%d): %s\n", strlen(message), message);
+	    printf("MESSAGE(%ld): %s\n", strlen(message), message);
 
         unsigned char * decodeIDK = (unsigned char *)malloc(strlen(idk) + 1);
         b64_decode(idk, decodeIDK, strlen(idk));

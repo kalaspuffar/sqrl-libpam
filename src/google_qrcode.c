@@ -16,6 +16,7 @@
 #include <dlfcn.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 #define ANSI_RESET        "\x1B[0m"
 #define ANSI_BLACKONGREY  "\x1B[30;47;27m"

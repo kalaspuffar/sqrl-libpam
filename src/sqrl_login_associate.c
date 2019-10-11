@@ -2,6 +2,7 @@
 #include <arpa/inet.h>
 #include <sys/socket.h>
 #include <unistd.h>
+#include <stdbool.h>
 
 #include "ssl_server.h"
 #include "google_qrcode.h"
